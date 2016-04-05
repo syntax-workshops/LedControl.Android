@@ -319,10 +319,11 @@ public class ColorPicker extends View {
                 invalidate();
             }
 
+            return true;
+        case MotionEvent.ACTION_UP:
             if(this.onColorChangeListener != null) {
                 this.onColorChangeListener.colorDidChange(getColor());
             }
-            return true;
         }
         return super.onTouchEvent(event);
     }

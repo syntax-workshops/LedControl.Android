@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import workshop.syntaxleiden.nl.ledcontrol.colorpicker.ColorPicker;
-import workshop.syntaxleiden.nl.ledcontrol.colorpicker.PrintColorListener;
+import workshop.syntaxleiden.nl.ledcontrol.colorpicker.UdpColorListener;
 
 public class ColorPickerActivity extends AppCompatActivity {
 
@@ -16,6 +16,6 @@ public class ColorPickerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_color_picker);
 
         colorPicker = (ColorPicker) findViewById(R.id.colorPicker);
-        colorPicker.onColorChangeListener = new PrintColorListener();
+        colorPicker.onColorChangeListener = new UdpColorListener("192.168.1.154", 80, 70);
     }
 }
