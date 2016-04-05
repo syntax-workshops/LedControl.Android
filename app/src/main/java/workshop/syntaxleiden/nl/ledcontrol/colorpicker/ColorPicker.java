@@ -36,6 +36,7 @@ import android.graphics.SweepGradient;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -292,28 +293,38 @@ public class ColorPicker extends View {
 
     }
 
+    private enum WhereAreWe {
+        Nowhere, InColorWheel, InBrightnessWheel
+    }
+
+    private WhereAreWe whereAreWe = WhereAreWe.Nowhere;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
+
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+        int cx = x - getWidth() / 2;
+        int cy = y - getHeight() / 2;
+        double d = Math.sqrt(cx * cx + cy * cy);
+
         switch (action) {
         case MotionEvent.ACTION_DOWN:
-        case MotionEvent.ACTION_MOVE:
-
-            int x = (int) event.getX();
-            int y = (int) event.getY();
-            int cx = x - getWidth() / 2;
-            int cy = y - getHeight() / 2;
-            double d = Math.sqrt(cx * cx + cy * cy);
-
             if (d <= colorWheelRadius) {
-
+                whereAreWe = WhereAreWe.InColorWheel;
+            } else if (x >= getWidth() / 2 && d >= innerWheelRadius) {
+                whereAreWe = WhereAreWe.InBrightnessWheel;
+            } else {
+                whereAreWe = WhereAreWe.Nowhere;
+            }
+        case MotionEvent.ACTION_MOVE:
+            if (whereAreWe == WhereAreWe.InColorWheel) {
                 colorHSV[0] = (float) (Math.toDegrees(Math.atan2(cy, cx)) + 180f);
                 colorHSV[1] = Math.max(0f, Math.min(1f, (float) (d / colorWheelRadius)));
 
                 invalidate();
-
-            } else if (x >= getWidth() / 2 && d >= innerWheelRadius) {
-
+            } else if (whereAreWe == WhereAreWe.InBrightnessWheel) {
                 colorHSV[2] = (float) Math.max(0, Math.min(1, Math.atan2(cy, cx) / Math.PI + 0.5f));
 
                 invalidate();
