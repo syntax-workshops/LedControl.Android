@@ -1,22 +1,30 @@
 package workshop.syntaxleiden.nl.ledcontrol.colorpicker;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 
 import java.io.IOException;
 import java.net.*;
 
+import workshop.syntaxleiden.nl.ledcontrol.ColorPickerActivity;
+import workshop.syntaxleiden.nl.ledcontrol.R;
+
 public class UdpColorListener implements ColorChangeListener {
     final int port;
-    final String ip;
+    String ip;
     final int count;
+    final ColorPickerActivity view;
 
-    public UdpColorListener(String ip, int port, int count) {
+    public UdpColorListener(int port, int count, ColorPickerActivity view) {
         this.port = port;
-        this.ip = ip;
+        this.ip = "192.168.1.100";
         this.count = count;
+        this.view = view;
     }
 
     @Override
@@ -34,6 +42,9 @@ public class UdpColorListener implements ColorChangeListener {
         }
 
         Log.v("Color changed!", "" + Color.red(color) + ", " + Color.red(green) + ", " + Color.red(blue));
+
+        EditText ipField = (EditText) view.findViewById(R.id.ipTextView);
+        this.ip = ipField.getText().toString();
 
         AsyncTask<byte[], Integer, Void> task = new SendColorPacketTask();
         if (Build.VERSION.SDK_INT >= 11)
