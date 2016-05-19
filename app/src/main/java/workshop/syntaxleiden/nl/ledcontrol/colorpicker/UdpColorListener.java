@@ -17,12 +17,12 @@ import workshop.syntaxleiden.nl.ledcontrol.R;
 public class UdpColorListener implements ColorChangeListener {
     final int port;
     String ip;
-    final int count;
+    int count;
     final ColorPickerActivity view;
 
-    public UdpColorListener(int port, int count, ColorPickerActivity view) {
+    public UdpColorListener(String ip, int port, int count, ColorPickerActivity view) {
         this.port = port;
-        this.ip = "192.168.1.100";
+        this.ip = ip;
         this.count = count;
         this.view = view;
     }
@@ -44,7 +44,11 @@ public class UdpColorListener implements ColorChangeListener {
         Log.v("Color changed!", "" + Color.red(color) + ", " + Color.red(green) + ", " + Color.red(blue));
 
         EditText ipField = (EditText) view.findViewById(R.id.ipTextView);
+        EditText ledField = (EditText) view.findViewById(R.id.ledTextView);
         this.ip = ipField.getText().toString();
+        this.count = Integer.parseInt(ledField.getText().toString());
+
+        Log.d("leds", ledField.getText().toString());
 
         AsyncTask<byte[], Integer, Void> task = new SendColorPacketTask();
         if (Build.VERSION.SDK_INT >= 11)

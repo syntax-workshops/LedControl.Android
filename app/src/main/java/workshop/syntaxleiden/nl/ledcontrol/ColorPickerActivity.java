@@ -16,6 +16,6 @@ public class ColorPickerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_color_picker);
 
         colorPicker = (ColorPicker) findViewById(R.id.colorPicker);
-        colorPicker.onColorChangeListener = new UdpColorListener(80, 70, this);
+        colorPicker.onColorChangeListener = new UdpColorListener("192.168.1.100", 80, 60, this);
     }
 }
